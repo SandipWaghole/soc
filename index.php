@@ -15,7 +15,7 @@ switch ($method | $uri) {
 		$data=$obj_mod->getConsumerData(0);
 		$http_resp=200;
 		echo $data;
-		http_response_code($http_resp); // Bad Request
+		http_response_code($http_resp); 
         break;
 	
 	// GET specific customer user data
@@ -28,7 +28,7 @@ switch ($method | $uri) {
 		$http_resp = 200;
 
 		echo $data;
-		http_response_code($http_resp); // Bad Request
+		http_response_code($http_resp); 
         break;
 		
 	// Create Consumer
@@ -37,14 +37,29 @@ switch ($method | $uri) {
         $jsonData = file_get_contents('php://input');
 		$data = json_decode($jsonData, true);
 		
-		if ($data !== null) {
-			   $resp=$obj_mod->createConsumer($data);
-		   $http_resp = 201;
+		// API Gateway - Key authorization check
 
-		} else {
-		   $http_resp =400;
+		$headers = getallheaders();		
+		$security_token = $headers['token'];
+		
+		$check_status = $obj_mod->checkSecurityToken($security_token);
+		
+		if($check_status==200)
+		{		
+			if ($data !== null) {
+				   $resp=$obj_mod->createConsumer($data);
+			   $http_resp = 201;
+
+			} else {
+			   $http_resp =400;
+			}
 		}
-		http_response_code($http_resp); // Bad Request
+		else
+		{
+			$http_resp=$check_status;
+		}
+		
+		http_response_code($http_resp); 
 		echo $http_resp.":".getHttpStatusMessage($http_resp);
         break;	
 		
@@ -52,16 +67,31 @@ switch ($method | $uri) {
 	case ($method == 'PUT' && $uri == '/api/consumers'):
         header('Content-Type: application/json');
         $jsonData = file_get_contents('php://input');
-		$data = json_decode($jsonData, true);		
-	
-		if ($data !== null) {
-			   $resp=$obj_mod->modifyConsumer($data);
-				$http_resp = 200;
+		$data = json_decode($jsonData, true);
 
-		} else {
-		   $http_resp =400;
+		// API Gateway - Key authorization check
+
+		$headers = getallheaders();		
+		$security_token = $headers['token'];
+		
+		$check_status = $obj_mod->checkSecurityToken($security_token);
+		
+		if($check_status==200)
+		{		
+			if ($data !== null) {
+				   $resp=$obj_mod->modifyConsumer($data);
+			   $http_resp = 200;
+
+			} else {
+			   $http_resp =400;
+			}
 		}
-		http_response_code($http_resp); // Bad Request
+		else
+		{
+			$http_resp=$check_status;
+		}
+		
+		http_response_code($http_resp); 
 		echo $http_resp.":".getHttpStatusMessage($http_resp);
         break;	
 	
@@ -71,14 +101,29 @@ switch ($method | $uri) {
         $jsonData = file_get_contents('php://input');
 		$data = json_decode($jsonData, true);
 		
-		if ($data !== null) {
-			   $resp=$obj_mod->removeConsumer($data);
-		   $http_resp = 200;
+		// API Gateway - Key authorization check
 
-		} else {
-		   $http_resp =400;
+		$headers = getallheaders();		
+		$security_token = $headers['token'];
+		
+		$check_status = $obj_mod->checkSecurityToken($security_token);
+		
+		if($check_status==200)
+		{		
+			if ($data !== null) {
+				   $resp=$obj_mod->removeConsumer($data);
+			   $http_resp = 200;
+
+			} else {
+			   $http_resp =400;
+			}
 		}
-		http_response_code($http_resp); // Bad Request
+		else
+		{
+			$http_resp=$check_status;
+		}		
+		
+		http_response_code($http_resp); 
 		echo $http_resp.":".getHttpStatusMessage($http_resp);
         break;	
 }

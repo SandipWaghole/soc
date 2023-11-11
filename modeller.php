@@ -3,6 +3,24 @@ include 'dbconnect.php';
 
 class Modeller{
 	
+	public function checkSecurityToken($token)
+    {	
+
+	$obj = new DbConnect();
+	$conn=$obj->db_connection();
+	
+	$sql = "SELECT * FROM tbl_consumers_token WHERE token = '$token'";
+
+	$result = mysqli_query($conn, $sql);
+
+		if (mysqli_num_rows($result) > 0) {
+		 return 200;
+		} else {
+		  return 401;
+		}
+
+    }
+	
 	public function getConsumerData($user_id)
     {	
 
