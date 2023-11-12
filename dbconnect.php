@@ -6,7 +6,7 @@ class DbConnect{
 		$servername = "localhost";
 		$username = "root";
 		$password = "";
-		$dbname = "db_medical";
+		$dbname = "db_grocery";
 
 		// Create My-SQL connection
 		$conn = mysqli_connect($servername, $username, $password, $dbname);
